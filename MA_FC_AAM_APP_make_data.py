@@ -466,3 +466,223 @@ df_output_1=pd.DataFrame(df_output,columns=['aam_name','grid_avl_all','grid_avl_
 
 df_output_2=pd.DataFrame(df_output,columns=['aam_name','avg_grid_daily_all','avg_grid_daily_day','avg_grid_daily_oh','avg_bl_duration','avg_bl_nu_d','avg_bl_nu_m','pv_kwh','avg_pv_daily','Yf_aug','Yf_sep','avg_load','load_kwh','load_kwh_pv','load_kwh_grid','load_kwh_bat'])
 #df_output_2
+
+with st.expander('Plot'):
+    
+    col1, col2 ,col3= st.columns(3)
+    col1.subheader('Inverter')
+    with col1:
+        battery_voltage = st.checkbox('Battery Voltage',value=True)
+        output_load= st.checkbox('Output Load*',value=True)
+        output_voltage=st.checkbox('Output Voltage')
+        output_current=st.checkbox('Output Current')
+        output_frequency=st.checkbox('Output Frequency')
+        temperature=st.checkbox('Temperature')
+        input_voltage=st.checkbox('Grid Voltage [V]',value=True)
+        input_fault_voltage=st.checkbox('Grid fault voltage [V]')
+        
+        
+    with col2:
+        col2.subheader('MPPT')
+        pv_w=st.checkbox('PV[W]',value=True)
+        pv_a=st.checkbox('PV[A]')
+        pv_v=charging_input_voltage=st.checkbox('PV[V]')
+        #bat_w=st.checkbox('Battery charging [W]')
+        bat_v= st.checkbox('Battery charging Voltage ',value=True)
+        #bat_a=st.checkbox('Battery charging current')
+        load_w=st.checkbox('Load[W]*')
+        #load_v=st.checkbox('Load[V]')
+        #load_a=st.checkbox('Load[A]')
+        #st.checkbox('Temperature_inside')
+        #st.checkbox('Temperature_power_components')
+        bat_t=st.checkbox('Temperature_battery')
+        #st.checkbox('SOC')
+        #st.checkbox('Battery Status')
+        
+    with col3:
+        col3.subheader('MCU')
+        peak_voltage=st.checkbox('Grid Voltage[V]',value=True)  
+        st.subheader('other')
+        inv_cut_off=st.checkbox('Inverter Cut Off',value=True) 
+        Float=st.checkbox('Float',value=True) 
+        bulk=st.checkbox('Bulk',value=True) 
+        mppt_cut_off=st.checkbox('MPPT Cut OFF',value=True) 
+    ########  PLOT
+
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    ## INVERTER
+    if battery_voltage:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['battery_voltage_inv'], name="Battery_Voltage_Inv",
+                                line_shape='linear',line_color='coral'),secondary_y=False,)
+    if output_load:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['output_load'], name="Load",
+                                line_shape='linear',fill='tozeroy',mode="lines", 
+                                line=dict(width=0.5, color='lightslategrey')),secondary_y=True,)#fill='tonexty' 
+    
+    if output_voltage:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['output_voltage_inv'], name="output_voltage",
+                                line_shape='linear',mode="lines",
+                                line_color='chocolate'),secondary_y=True,)
+    if output_current:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['output_current_inv'], name="output_current",
+                                line_shape='linear',mode="lines",
+                                line_color='crimson'),secondary_y=False,) 
+    
+    if temperature:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['temperature_inv'], name="inverter temperature",
+                                line_shape='linear',mode="lines",
+                                line_color='crimson'),secondary_y=False,) 
+    if input_voltage:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['input_voltage_inv'], name="Grid Voltage [V]",
+                                line_shape='linear',mode="lines",
+                                line_color='crimson'),secondary_y=True,) 
+    
+      #########  MPPT
+    if pv_w:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                 y=system_data_time['PV_W'], name="PV",
+                                line_shape='linear',fill='tozeroy',mode="lines",
+                                line=dict(width=0.5, color='gold')),secondary_y=True,)#fill='tonexty'
+    if pv_a:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['mppt_output_current'], name="PV_A",
+                                line_shape='linear',mode="lines",
+                                line_color='DarkOrange'),secondary_y=False,) 
+    if pv_v:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['mppt_output_voltage'], name="PV_V",
+                                line_shape='linear',mode="lines",
+                                line_color='DarkSalmon'),secondary_y=True,)     
+    if bat_v:    
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                 y=df_mppt['charging_output_voltage'], name="Battery_Voltage_MPPT",
+                                line_shape='linear',line_color='darkseagreen', mode="lines", connectgaps=False),secondary_y=False,)
+    if load_w:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=df_mppt['MPPT_Out'], name="MPPT_Load",
+                                line_shape='linear',fill='tozeroy',mode="lines",
+                                line=dict(width=0.5, color='DarkOrange')),secondary_y=False,)#fill='tonexty'
+    if bat_t:    
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                 y=df_mppt['Temperature_battery'], name="Battery_Temperature",
+                                line_shape='linear',line_color='red', mode="lines", connectgaps=False),secondary_y=False,)
+
+    ## ADC
+    if peak_voltage:
+        fig.add_trace(go.Scatter(x=system_data_time.index, 
+                                y=system_data_time['input_voltage_mcu'], name="Grid_In_Voltage_ADC",
+                                line_shape='linear',line_color='lightslategrey'),secondary_y=True,)
+
+    ## Extras
+    if mppt_cut_off:
+        fig.add_hline(y=22.6, 
+                    annotation_text="MPPT OUT 22.6",
+                    line_color='dimgrey',
+                    annotation_position="bottom left",
+                    line_width=1,
+                     line_dash='dash')
+    if inv_cut_off:
+        fig.add_hline(y=23.4, 
+                      annotation_text="INV_CUT_OFF 23.4",
+                      line_color='dimgrey',
+                      annotation_position="bottom left",
+                     line_width=1,
+                     line_dash='dash')
+    if Float:
+        fig.add_hline(y=26.8, 
+                      annotation_text="Float 26.8",
+                      line_color='dimgrey',
+                      annotation_position="bottom left",
+                     line_width=1,
+                     line_dash='dash')
+    if bulk:
+        fig.add_hline(y=28.6, 
+                      annotation_text="Bulk 28.6",
+                      line_color='dimgrey',
+                      annotation_position="bottom left",
+                    line_width=1,
+                     line_dash='dash')
+
+
+    fig.update_traces( mode='lines')
+
+    fig.update_layout(
+            xaxis=dict(
+                showline=True,
+                showgrid=True,
+                showticklabels=True,
+                linewidth=1.5,
+                ticks='outside',
+                title="Time",
+                gridcolor='lightgrey',
+                linecolor='lightgrey',
+                mirror=True,
+                tickformat='%d/%m %H:%M', #%H:%M',
+                tickfont=dict(
+                    family='Fugue',
+                    size=12,
+                    color='rgb(82, 82, 82)'
+                    ),
+            ),
+            yaxis=dict(
+                title="Battery Voltage in V",
+                showgrid=False,
+                zeroline=True,
+                showline=True,
+                linewidth=1.5,
+                ticks='outside',
+                linecolor='lightgrey',
+                mirror=True,
+                showticklabels=True,
+                gridcolor='lightgrey',
+                tickfont=dict(
+                    family='Fugue',
+                     size=12,
+                    color='rgb(82, 82, 82)',
+                ),
+                range=[22,30]
+            ),
+            legend=dict(
+                title="",
+                orientation="h",
+                yanchor="bottom",
+                y=-0.4,
+                xanchor="center",
+                x=0.5,
+                ),
+            autosize=True,
+            margin=dict(
+                autoexpand=True,
+                l=100,
+                r=20,
+                t=110,
+            ),
+            showlegend=True,
+            plot_bgcolor='white',
+
+            font=dict(
+            family="Wigrum",
+                )
+            )
+
+    fig.update_yaxes(title_text="Load in W / Grid Voltage in V", 
+                         secondary_y=True,
+                         ticks='outside',
+                         tickfont=dict(
+                                family='Fugue',
+                                size=12,
+                                color='rgb(82, 82, 82)',),
+                         range=[0,600]
+                         ,)
+        #fig.update_layout(
+         #   title_text="Battery Voltage",
+          #  title_x=0.5)
+
+    st.plotly_chart(fig, use_container_width=True)
