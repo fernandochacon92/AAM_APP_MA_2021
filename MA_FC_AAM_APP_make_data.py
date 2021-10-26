@@ -58,8 +58,8 @@ maraba=['206','283','316','376','527','576','602','937','943','1076']
 
 
 path2merges= "use_data/use_"+aam_name+".csv"#Set Path for merges 
-path2locations= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/locations.csv" 
-path2bot = "C:/Users/ThinkPad X1 Carbon/A2EI_PY/SKGS_P2_Logs/"#set path to whatsapp bot file
+path2locations= "locations.csv" 
+
 
 
 #Set time from where Merge should start
@@ -433,7 +433,7 @@ cost_savings_pv=round((daily_data['E_Wh_daily'].sum()/1000*usd_fuel*gen_consump)
 #Write down some data :)
 
 
-df_output = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/data_output.csv",index_col='aam_name')
+df_output = pd.read_csv("data_output.csv",index_col='aam_name')
 
 df_output
 
@@ -459,7 +459,7 @@ df_output=df_output.append(df_output_log)
 df_output_log
 df_output
 
-df_output.to_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/data_output.csv")
+#df_output.to_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/data_output.csv")
 
 df_output_1=pd.DataFrame(df_output,columns=['aam_name','grid_avl_all','grid_avl_all_usb','grid_avl_day','grid_avl_day_usb','grid_avl_oh','grid_avl_oh_usb','aam_avl_all','aam_avl_day','aam_avl_oh','PR_aug','PR_sep'])
 #df_output_1
