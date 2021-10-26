@@ -57,7 +57,7 @@ gen=['206','645','511']
 maraba=['206','283','316','376','527','576','602','937','943','1076']
 
 
-path2merges= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/use_data/use_"+aam_name+".csv"#Set Path for merges 
+path2merges= "use_data/use_"+aam_name+".csv"#Set Path for merges 
 path2locations= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/locations.csv" 
 path2bot = "C:/Users/ThinkPad X1 Carbon/A2EI_PY/SKGS_P2_Logs/"#set path to whatsapp bot file
 
