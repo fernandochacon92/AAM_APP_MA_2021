@@ -74,7 +74,7 @@ system_data_all.sort_index(inplace=True)
 system_data_time = system_data_all[time_start : time_end]
 
 #import aam system information 
-aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv",index_col='aam_name')
+aam_main=pd.read_csv("aam_main.csv",index_col='aam_name')
 aam_main
 ## Solar radiation data to calculate the performance ration of PV system
 
