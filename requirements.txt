@@ -8,4 +8,3 @@ numpy==1.18.1
 streamlit==1.0.0
 matplotlib==3.0.0
 plotly==4.14.1
-isodate==0.5.4
