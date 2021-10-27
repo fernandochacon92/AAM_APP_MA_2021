@@ -143,7 +143,7 @@ df_grid=pd.DataFrame(columns=['input_voltage_mcu','input_voltage_mcu_shifted','i
 
 df_grid['input_voltage_mcu']=system_data_time['input_voltage_mcu']
 df_grid['input_voltage_mcu_shifted']=df_grid['input_voltage_mcu']
-df_grid['input_voltage_mcu_not_0'].mask(df_grid['input_voltage_mcu_shifted']>0,df_grid['input_voltage_mcu_shifted'],inplace=True) #takes out the 0V data points 
+df_grid['input_voltage_mcu_not_0'].mask(df_grid['input_voltage_mcu_shifted']>20,df_grid['input_voltage_mcu_shifted'],inplace=True) #takes out the 0V data points 
 df_grid['input_voltage_inv']=system_data_time['input_voltage_inv']
 df_grid['input_voltage_inv_not_0'].mask(df_grid['input_voltage_inv']>0,df_grid['input_voltage_inv'],inplace=True) #takes out the 0V data points 
 
