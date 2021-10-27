@@ -392,6 +392,8 @@ avg_grid_voltage= round((df_grid['input_voltage_mcu_not_0'].mean()),1)
 min_grid_voltage= round((df_grid['input_voltage_mcu_not_0'].min()),1)
 max_grid_voltage= round((df_grid['input_voltage_mcu_not_0'].max()),1)
 
+avg_grid_voltage
+
 avg_aam_voltage= round((df_grid['output_voltage_inv'].mean()),1)
 min_aam_voltage= round((df_grid['output_voltage_inv'].min()),1)
 max_aam_voltage= round((df_grid['output_voltage_inv'].max()),1)
