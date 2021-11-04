@@ -50,7 +50,7 @@ usd_fuel=float( 0.4)#USD/liter
 path2merges= "use_data/use_"+aam_name+".csv"#Set Path for merges 
 path2locations= "locations.csv" 
 
-wa_bot_use = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/wa_bot_use.csv",
+wa_bot_use = pd.read_csv("wa_bot_use.csv",
                         parse_dates=['log_date'],
                         index_col=['log_date'])#set Timestamp column as index
 
