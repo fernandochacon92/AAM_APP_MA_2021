@@ -71,7 +71,6 @@ system_data_time = system_data_all[time_start : time_end]
 #aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv")#,index_col='aam_name')
 aam_main=pd.read_csv("aam_main.csv")
 
-aam_main
 aam_main_sidebar= aam_main.loc[ aam_main['aam_name'] == int(aam_name) ]
 bat_size= aam_main_sidebar['bat_size'].iloc[0].astype(str) 
 pv_location= aam_main_sidebar['location_solar_radiation'].iloc[0]
