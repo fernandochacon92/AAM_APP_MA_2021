@@ -435,7 +435,7 @@ covered_bl_bat=covered_bl_bat_nu/all_bl_nu
 ################################################################################
 #Write down some data :)
 
-df_output = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/data_output.csv")#,index_col='aam_name')
+df_output = pd.read_csv("data_output.csv")#,index_col='aam_name')
 
 df_output['avg_PR']=(df_output['PR_aug']+df_output['PR_sep'])/2
 
