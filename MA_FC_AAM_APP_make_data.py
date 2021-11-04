@@ -3574,11 +3574,11 @@ with st.expander('Overview All systems'):
 with st.expander('Daily Profiles'):
     
     
-    grid_avl_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/grid_avl_hourly.csv",index_col=['UTC'])## Import Data from the merge
-    grid_avl_usb_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/grid_avl_usb_hourly.csv",index_col=['UTC'])## Import Data from the merge
-    load_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/load_hourly.csv",index_col=['UTC'])## Import Data from the merge
-    pv_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/pv_hourly.csv",index_col=['UTC'])## Import Data from the merge
-    bat_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/bat_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    grid_avl_hourly = pd.read_csv("grid_avl_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    grid_avl_usb_hourly = pd.read_csv("grid_avl_usb_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    load_hourly = pd.read_csv("load_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    pv_hourly = pd.read_csv("pv_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    bat_hourly = pd.read_csv("bat_hourly.csv",index_col=['UTC'])## Import Data from the merge
 
 
     households_grid_avl_hourly= grid_avl_hourly[households['aam_name']]
