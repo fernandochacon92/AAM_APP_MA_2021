@@ -31,7 +31,7 @@ st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AMM DATA T
 
 #Set 
 today= time.strftime("%Y_%m_%d_")#Today's date
-aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167']))#Set System Name
+aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167'],index=20))#Set System Name
 
 
 
