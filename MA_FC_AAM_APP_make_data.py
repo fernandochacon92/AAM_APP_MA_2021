@@ -26,12 +26,12 @@ st.set_page_config(
      initial_sidebar_state="expanded",
      layout="wide",)
 
-st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AAM DATA TOOL</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AMM DATA TOOL</h1>", unsafe_allow_html=True)
 
 
 #Set 
 today= time.strftime("%Y_%m_%d_")#Today's date
-aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167']))#Set System Name
+aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167'],index=1))#Set System Name
 
 
 
@@ -43,17 +43,12 @@ usd_fuel=float( 0.4)#USD/liter
         
 
 
-##Change for online version
+
 #path2merges= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/use_data/use_"+aam_name+".csv"#Set Path for merges 
 #path2locations= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/locations.csv" 
 
 path2merges= "use_data/use_"+aam_name+".csv"#Set Path for merges 
 path2locations= "locations.csv" 
-
-##Change for online version
-#wa_bot_use = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/wa_bot_use.csv",
- #                       parse_dates=['log_date'],
-  #                      index_col=['log_date'])#set Timestamp column as index
 
 wa_bot_use = pd.read_csv("wa_bot_use.csv",
                         parse_dates=['log_date'],
@@ -72,19 +67,17 @@ system_data_all.sort_index(inplace=True)
 
 system_data_time = system_data_all[time_start : time_end]
 
-##Change for online version
 #import aam system information 
-#aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv",index_col=False)#,index_col='aam_name')
-aam_main=pd.read_csv("aam_main.csv",index_col='aam_name')
+#aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv")#,index_col='aam_name')
+aam_main=pd.read_csv("aam_main.csv")
 
-aam_main_sidebar= aam_main.iloc[ aam_main['aam_name'] == int(aam_name) ]
+aam_main_sidebar= aam_main.loc[ aam_main['aam_name'] == int(aam_name) ]
 bat_size= aam_main_sidebar['bat_size'].iloc[0].astype(str) 
 pv_location= aam_main_sidebar['location_solar_radiation'].iloc[0]
 aam_main_sidebar= aam_main_sidebar.astype(str) 
 st.sidebar.header('Overview System: '+aam_name)
 st.sidebar.table(aam_main_sidebar.T)
 
-##Change for online version
 solar_radiation = pd.read_csv("pv_data_2005_2016.csv",
                                  sep=',',
                                 parse_dates=['Month'],
@@ -101,6 +94,7 @@ solar_radiation_d[pv_location]= solar_radiation[pv_location].reindex(dates, meth
 solar_radiation_d[pv_location]= solar_radiation_d[pv_location]/solar_radiation_d.index.daysinmonth
 
 ## Separate data into Inverter, MPPT and MCU Data
+
 
 ## Data Processing
 
