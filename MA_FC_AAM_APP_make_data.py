@@ -21,12 +21,12 @@ from pathlib import Path
 
 
 st.set_page_config(
-     page_title="MA_FC_AAM App",
+     page_title="AAM Data Tool ",
      page_icon=":sunny:",
      initial_sidebar_state="expanded",
      layout="wide",)
 
-st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AMM DATA TOOL</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AAM DATA TOOL</h1>", unsafe_allow_html=True)
 
 
 #Set 
