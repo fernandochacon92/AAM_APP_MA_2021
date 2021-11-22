@@ -26,12 +26,12 @@ st.set_page_config(
      initial_sidebar_state="expanded",
      layout="wide",)
 
-st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AMM DATA TOOL</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: rgb(223,116,149);'>AAM DATA TOOL</h1>", unsafe_allow_html=True)
 
 
 #Set 
 today= time.strftime("%Y_%m_%d_")#Today's date
-aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167'],index=1))#Set System Name
+aam_name= str(st.sidebar.selectbox('Select AAM Name', ['206','283','316','376','511','524','527','528','557','563','576','602','645','654','661','663','691','698','937','943','945','1076','1167']))#Set System Name
 
 
 
@@ -43,12 +43,17 @@ usd_fuel=float( 0.4)#USD/liter
         
 
 
-
+##Change for online version
 #path2merges= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/use_data/use_"+aam_name+".csv"#Set Path for merges 
 #path2locations= "C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/locations.csv" 
 
 path2merges= "use_data/use_"+aam_name+".csv"#Set Path for merges 
 path2locations= "locations.csv" 
+
+##Change for online version
+#wa_bot_use = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/wa_bot_use.csv",
+ #                       parse_dates=['log_date'],
+  #                      index_col=['log_date'])#set Timestamp column as index
 
 wa_bot_use = pd.read_csv("wa_bot_use.csv",
                         parse_dates=['log_date'],
@@ -67,9 +72,10 @@ system_data_all.sort_index(inplace=True)
 
 system_data_time = system_data_all[time_start : time_end]
 
+##Change for online version
 #import aam system information 
-#aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv")#,index_col='aam_name')
-aam_main=pd.read_csv("aam_main.csv")
+#aam_main=pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/aam_main.csv",index_col=False)#,index_col='aam_name')
+aam_main=pd.read_csv("aam_main.csv",index_col='aam_name')
 
 aam_main_sidebar= aam_main.loc[ aam_main['aam_name'] == int(aam_name) ]
 bat_size= aam_main_sidebar['bat_size'].iloc[0].astype(str) 
@@ -78,6 +84,7 @@ aam_main_sidebar= aam_main_sidebar.astype(str)
 st.sidebar.header('Overview System: '+aam_name)
 st.sidebar.table(aam_main_sidebar.T)
 
+##Change for online version
 solar_radiation = pd.read_csv("pv_data_2005_2016.csv",
                                  sep=',',
                                 parse_dates=['Month'],
@@ -144,9 +151,8 @@ df_grid['input_voltage_inv_not_0'].mask(df_grid['input_voltage_inv']>0,df_grid['
 df_grid['output_voltage_inv'].mask(system_data_time['output_voltage_inv']>=20,system_data_time['output_voltage_inv'],inplace=True)
 
 
-df_grid['grid_voltage_use'].mask((df_grid['output_voltage_inv']<=229)|(df_grid['output_voltage_inv']>=231),df_grid['input_voltage_inv'], inplace=True)
+df_grid['grid_voltage_use'].mask((df_grid['output_voltage_inv']<=229)|(df_grid['output_voltage_inv']>=231), df_grid['input_voltage_inv'], inplace=True)
 df_grid['grid_voltage_use'].replace(0,np.nan ,inplace=True)
-
 min_amm_grid_v = round((df_grid['grid_voltage_use'].quantile(0.05)),1)
 
 df_grid['grid_on_time_usb'].mask(df_grid['grid_voltage_use']>0,5, inplace=True)#inplace overwrite the original data frame
@@ -434,7 +440,10 @@ covered_bl_bat=covered_bl_bat_nu/all_bl_nu
 ################################################################################
 #Write down some data :)
 
+##Change for online version
+#df_output = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/data_output.csv")#,index_col='aam_name')
 df_output = pd.read_csv("data_output.csv")#,index_col='aam_name')
+
 
 df_output['avg_PR']=(df_output['PR_aug']+df_output['PR_sep'])/2
 
@@ -3571,8 +3580,20 @@ with st.expander('Overview All systems'):
     #fig.write_image("bl_grid_maraba.pdf")
 
 
-with st.expander('Daily Profiles'):
-    
+with st.expander('Daily Profiles and Downloads'):
+    ################################### def for download button
+    @st.cache
+    def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+        return df.to_csv().encode('utf-8')  
+    ###########################################################################
+    ##Change for online version
+
+    #grid_avl_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/grid_avl_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    #grid_avl_usb_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/grid_avl_usb_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    #load_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/load_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    #pv_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/pv_hourly.csv",index_col=['UTC'])## Import Data from the merge
+    #bat_hourly = pd.read_csv("C:/Users/ThinkPad X1 Carbon/A2EI_PY/AAM_APP/ma_fc_data/bat_hourly.csv",index_col=['UTC'])## Import Data from the merge
     
     grid_avl_hourly = pd.read_csv("grid_avl_hourly.csv",index_col=['UTC'])## Import Data from the merge
     grid_avl_usb_hourly = pd.read_csv("grid_avl_usb_hourly.csv",index_col=['UTC'])## Import Data from the merge
@@ -3590,6 +3611,8 @@ with st.expander('Daily Profiles'):
     #household_ongrid_grid_avl_hourly
 
     #########################################################################################
+    
+    st.markdown("<h3 style='text-align: center'>Daily load profile and daily grid availability (Grid connected systems)</h3>", unsafe_allow_html=True)
 
     all_grid_avl_hourly=grid_avl_hourly[ongrid['aam_name']]
     all_grid_avl_hourly['mean'] = all_grid_avl_hourly.mean(axis=1)
@@ -3667,8 +3690,52 @@ with st.expander('Daily Profiles'):
 
     st.plotly_chart(fig, use_container_width=True)
     #fig.write_image("load_availability_all_grid.pdf") #############This one
-
+    
+    ##################################################################################################    
+    csv_avg_consumption = convert_df(df_output[['aam_name','avg_load_daily']])
+    
+    st.download_button(
+        label="Download daily average consumption from all systems as CSV",
+        data=csv_avg_consumption,
+        file_name='daily_average_consumption.csv',
+        mime='text/csv',
+    )
+    
+    ##################################################################################################
+    
+    
+    csv_load_hourly = convert_df(load_hourly)
+    
+    st.download_button(
+        label="Download all load profiles as CSV",
+        data=csv_load_hourly,
+        file_name='load_hourly.csv',
+        mime='text/csv',
+    )
+    ##################################################################################################
+    
+    
+    csv_grid_hourly = convert_df(grid_avl_hourly)
+    
+    st.download_button(
+        label="Download all grid availability profiles as CSV",
+        data=csv_grid_hourly,
+        file_name='grid_availability_hourly.csv',
+        mime='text/csv',
+    )
     #################################################################################################
+    
+    csv_grid_hourly_usb = convert_df(grid_avl_usb_hourly)
+    
+    st.download_button(
+        label="Download all grid availability profiles (usable) as CSV",
+        data=csv_grid_hourly_usb,
+        file_name='grid_availability_hourly_usable.csv',
+        mime='text/csv',
+    )
+    #################################################################################################
+    
+    st.markdown("<h3 style='text-align: center'>Average load profiles of MEs and households</h3>", unsafe_allow_html=True)
 
     household_load_hourly=load_hourly[households['aam_name']]
     household_load_hourly['mean'] = household_load_hourly.mean(axis=1)
@@ -3738,7 +3805,33 @@ with st.expander('Daily Profiles'):
 
     st.plotly_chart(fig, use_container_width=True)
     #fig.write_image("households_mes_load_all.pdf")
+    
+    ###############################
+
+    
+    
+    csv_household_load_hourly = convert_df(household_load_hourly)
+    
+    st.download_button(
+        label="Download household load profiles as CSV",
+        data=csv_household_load_hourly,
+        file_name='household_load_hourly.csv',
+        mime='text/csv',
+    )
+    
+    csv_mes_load_hourly = convert_df(mes_load_hourly)
+    
+    st.download_button(
+        label="Download micro enterprises load profiles as CSV",
+        data=csv_mes_load_hourly,
+        file_name='mes_load_hourly.csv',
+        mime='text/csv',
+    )
+    
+    
     #####################################################################################
+    
+    st.markdown("<h3 style='text-align: center'>Profiles of grid availability in Mararaba, Nigeria</h3>", unsafe_allow_html=True)
 
     maraba_grid_avl_hourly=grid_avl_hourly[grid_avl_hourly[maraba['aam_name']].columns[grid_avl_hourly[maraba['aam_name']].columns.isin(ongrid['aam_name'])]]
     #maraba_grid_avl_hourly['mean'] = maraba_grid_avl_hourly.mean(axis=1)
@@ -3799,9 +3892,24 @@ with st.expander('Daily Profiles'):
                                         )                             
     st.plotly_chart(fig, use_container_width=True)
     #fig.write_image("grid_hourly_profile_maraba.pdf")
+    
+    ##################################################################################################
+    
+    
+    csv_grid_mararaba_hourly = convert_df(maraba_grid_avl_hourly)
+    
+    st.download_button(
+        label="Download grid availability profiles for Mararaba Nigera as CSV",
+        data=csv_grid_mararaba_hourly,
+        file_name='grid_availability_mararaba_hourly.csv',
+        mime='text/csv',
+    )
+
 
     #####################################################################################
-
+    
+    st.markdown("<h3 style='text-align: center'>Daily PV power profile of systems 283 and 654</h3>", unsafe_allow_html=True)
+    
     grid_pv_hourly=pv_hourly[ongrid['aam_name']]
     grid_pv_hourly['mean'] = grid_pv_hourly.mean(axis=1)
     #grid_pv_hourly
@@ -3872,6 +3980,9 @@ with st.expander('Daily Profiles'):
     #fig.write_image("pv_hourly_283_654.pdf")######this one
     #####################################################################################
 
+    st.markdown("<h3 style='text-align: center'>Average of daily battery profiles of on-grid and off-grid systems</h3>", unsafe_allow_html=True)
+    
+    
     grid_bat_hourly=bat_hourly[ongrid['aam_name']]
     grid_bat_hourly['mean'] = grid_bat_hourly.mean(axis=1)
     #grid_bat_hourly
@@ -3939,61 +4050,9 @@ with st.expander('Daily Profiles'):
     st.plotly_chart(fig, use_container_width=True)
     #fig.write_image("bat_hourly_grid_offgrid.pdf")######this one
 
-    #####################################################################################
-    fig = go.Figure()
-
-    for i in mes_load_hourly.columns:
-        fig.add_trace(go.Scatter(x=mes_load_hourly.index, y=mes_load_hourly[i],name=i))
-
-    fig.update_layout(  #title='Hourly grid availability profile USB',
-                                    plot_bgcolor='white',
-                                    xaxis=dict(
-                                        showline=True,
-                                        showgrid=False,
-                                        showticklabels=True,
-                                        linewidth=1.5,
-                                        ticks='outside',
-                                        title="hour",
-                                        gridcolor='lightgrey',
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        #tickformat='%d/%m %H:%M', #%H:%M',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        range=[1,24],
-                                        dtick = 1,
-                                        ),
-                                    yaxis=dict(
-                                        title=" Probability grid availability in %",
-                                        #showgrid=True,
-                                        zeroline=True,
-                                        showline=True,
-                                        linewidth=1.5,
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        showticklabels=True,
-                                        gridcolor='lightgrey',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        #range=[0,1],
-                                        #dtick = 0.1,
-                                        ticks='outside',
-                                        #tickformat='%',
-                                        ),
-                                    font=dict( family="Fugue", size=12, color='black'),
-                                    autosize=False,
-                                    width=600, height=300,
-                                    margin=dict(l=15, r=15, b=15, t=15,  pad=2),
-                                    showlegend=True,
-                                    legend=dict(title="",
-                                                orientation="h",
-                                                yanchor="bottom",
-                                                y=1.05,
-                                                xanchor="center",
-                                                traceorder='normal',
-                                                x=0.5,
-                                                ),
-                                        )                             
-    st.plotly_chart(fig, use_container_width=True)
-                #fig.write_image("hour_profile_usb.pdf")
+    
+    st.markdown("<h3 style='text-align: center'>Grid availability profiles</h3>", unsafe_allow_html=True)
+    
     fig = go.Figure()
 
     for i in grid_avl_hourly.columns:
@@ -4048,6 +4107,8 @@ with st.expander('Daily Profiles'):
                                         )                             
     st.plotly_chart(fig, use_container_width=True)
                 #fig.write_image("hour_profile_usb.pdf")
+        
+    st.markdown("<h3 style='text-align: center'>Grid availability (Usable) profiles</h3>", unsafe_allow_html=True)
 
     fig = go.Figure()
 
@@ -4103,6 +4164,10 @@ with st.expander('Daily Profiles'):
                                         )                             
     st.plotly_chart(fig, use_container_width=True)
 
+    
+    st.markdown("<h3 style='text-align: center'>Load profiles</h3>", unsafe_allow_html=True)
+    
+    
     fig = go.Figure()
 
     for i in load_hourly.columns:
@@ -4158,67 +4223,13 @@ with st.expander('Daily Profiles'):
     st.plotly_chart(fig, use_container_width=True)
 
     fig = go.Figure()
+    
 
-    ##############################################################################################
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(x=load_hourly.index, y=load_hourly['524'],line_color='goldenRod',line_width=2,name='Day-Only'))
-
-    fig.add_trace(go.Scatter(x=load_hourly.index, y=load_hourly['1076'],line_color='darkslategrey',line_width=2,name='All-Day'))
-
-    fig.add_trace(go.Scatter(x=load_hourly.index, y=load_hourly['1167'],line_color='rgb(223,116,149)',line_width=2,name='Opening-Hours'))
-
-    fig.update_layout(  #title='Hourly grid availability profile USB',
-                                    plot_bgcolor='white',
-                                    xaxis=dict(
-                                        showline=True,
-                                        showgrid=False,
-                                        showticklabels=True,
-                                        linewidth=1.5,
-                                        ticks='outside',
-                                        title="hour of the day",
-                                        gridcolor='lightgrey',
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        #tickformat='%d/%m %H:%M', #%H:%M',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        range=[1,24],
-                                        dtick = 1,
-                                        ),
-                                    yaxis=dict(
-                                        title="Load in W",
-                                        #showgrid=True,
-                                        zeroline=True,
-                                        showline=True,
-                                        linewidth=1.5,
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        showticklabels=True,
-                                        gridcolor='lightgrey',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        range=[0,600],
-                                        #dtick = 0.1,
-                                        ticks='outside',
-                                        #tickformat='%',
-                                        ),
-                                    font=dict( family="Fugue", size=12, color='black'),
-                                    autosize=False,
-                                    width=600, height=300,
-                                    margin=dict(l=15, r=15, b=15, t=15,  pad=2),
-                                    showlegend=True,
-                                    legend=dict(title="",
-                                                orientation="h",
-                                                yanchor="top",
-                                                y=0.99,
-                                                xanchor="left",
-                                                traceorder='normal',
-                                                x=0.01,
-                                                ),
-                                        )                             
-    st.plotly_chart(fig, use_container_width=True)
-    #fig.write_image("load_profiles_aam.pdf")
-    #########################################################################################################################
+    ##########################################################################################################################
+    
+    st.markdown("<h3 style='text-align: center'>PV Power profiles</h3>", unsafe_allow_html=True)
+    
+    
     fig = go.Figure()
 
     for i in load_hourly.columns:
@@ -4272,6 +4283,9 @@ with st.expander('Daily Profiles'):
                                                 ),
                                         )                             
     st.plotly_chart(fig, use_container_width=True)
+    
+    
+    st.markdown("<h3 style='text-align: center'>Battery voltage profiles</h3>", unsafe_allow_html=True)
 
     fig = go.Figure()
 
@@ -4328,71 +4342,7 @@ with st.expander('Daily Profiles'):
     st.plotly_chart(fig, use_container_width=True)
 
     #####################################################################################
-    fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-    fig.add_trace(go.Scatter(x=load_hourly.index, y=load_hourly['mean'],name= 'Average Load',line_color='rgb(223,116,149)'),secondary_y=False)
-    fig.add_trace(go.Scatter(x=grid_avl_usb_hourly.index, y=grid_avl_usb_hourly['mean'],name= 'Average Grid Availability',line_color='lightslategrey'),secondary_y=True)
-
-    fig.update_layout(  #title='Hourly grid availability profile USB',
-                                    plot_bgcolor='white',
-                                    xaxis=dict(
-                                        showline=True,
-                                        showgrid=False,
-                                        showticklabels=True,
-                                        linewidth=1.5,
-                                        ticks='outside',
-                                        title="hour of the day",
-                                        gridcolor='lightgrey',
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        #tickformat='%d/%m %H:%M', #%H:%M',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        range=[1,24],
-                                        dtick = 1,
-                                        ),
-                                    yaxis=dict(
-                                        title=" Average Load in W",
-                                        #showgrid=True,
-                                        zeroline=True,
-                                        showline=True,
-                                        linewidth=1.5,
-                                        linecolor='lightgrey',
-                                        mirror=True,
-                                        showticklabels=True,
-                                        gridcolor='lightgrey',
-                                        tickfont=dict(family="Fugue",size=12, color='Black'),
-                                        #range=[0,1],
-                                        #dtick = 0.1,
-                                        ticks='outside',
-                                        #tickformat='%',
-                                        ),
-                                    font=dict( family="Fugue", size=12, color='black'),
-                                    autosize=False,
-                                    width=600, height=300,
-                                    margin=dict(l=15, r=15, b=15, t=15,  pad=2),
-                                    showlegend=True,
-                                    legend=dict(title="",
-                                                orientation="h",
-                                                yanchor="bottom",
-                                                y=1.05,
-                                                xanchor="center",
-                                                traceorder='normal',
-                                                x=0.5,
-                                                ),
-                                                )
-    fig.update_yaxes(title_text=" Probability grid availability in %", 
-                             secondary_y=True,
-                             ticks='outside',
-                             tickfont=dict(
-                                    family='Fugue',
-                                    size=12,
-                                    color='rgb(82, 82, 82)',),
-                             range=[0.14,0.3],
-                             dtick = 0.1,
-                             tickformat='%',
-                             )
-
-    st.plotly_chart(fig, use_container_width=True)
+    
 with st.expander('Raw Data'):
     st.subheader('AAM Main')
     st.dataframe(aam_main)
